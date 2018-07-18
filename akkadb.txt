@@ -1,0 +1,75 @@
+
+CREATE TABLE akka_snapshot.snapshots (
+	persistence_id varchar,
+	sequence_nr bigint,
+	meta blob,
+	meta_ser_id int,
+	meta_ser_manifest varchar,
+	ser_id int,
+	ser_manifest varchar,
+	snapshot blob,
+	snapshot_data blob,
+	timestamp bigint,
+	PRIMARY KEY (persistence_id,sequence_nr)
+);
+
+CREATE TABLE akka.messages (
+	persistence_id varchar,
+	partition_nr bigint,
+	sequence_nr bigint,
+	timestamp timeuuid,
+	timebucket varchar,
+	used boolean,
+	event blob,
+	event_manifest varchar,
+	message blob,
+	meta blob,
+	meta_ser_id int,
+	meta_ser_manifest varchar,
+	ser_id int,
+	ser_manifest varchar,
+	tags set,
+	writer_uuid varchar,
+	PRIMARY KEY (partition_nr,persistence_id,sequence_nr,timebucket,timestamp)
+);
+
+CREATE TABLE akka.metadata (
+	persistence_id varchar,
+	deleted_to bigint,
+	properties map,
+	PRIMARY KEY (persistence_id)
+);
+
+CREATE TABLE akka.tag_scanning (
+	persistence_id varchar,
+	sequence_nr bigint,
+	PRIMARY KEY (persistence_id)
+);
+
+CREATE TABLE akka.tag_views (
+	tag_name varchar,
+	timebucket bigint,
+	timestamp timeuuid,
+	persistence_id varchar,
+	tag_pid_sequence_nr bigint,
+	event blob,
+	event_manifest varchar,
+	meta blob,
+	meta_ser_id int,
+	meta_ser_manifest varchar,
+	sequence_nr bigint,
+	ser_id int,
+	ser_manifest varchar,
+	writer_uuid varchar,
+	PRIMARY KEY (persistence_id,tag_name,tag_pid_sequence_nr,timebucket,timestamp)
+);
+
+CREATE TABLE akka.tag_write_progress (
+	persistence_id varchar,
+	tag varchar,
+	offset timeuuid,
+	sequence_nr bigint,
+	tag_pid_sequence_nr bigint,
+	PRIMARY KEY (persistence_id,tag)
+);
+
